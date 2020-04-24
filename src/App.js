@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  Switch,
+  Route,
+  BrowserRouter as Router,
+} from "react-router-dom";
+import Cinema from './views/cinema';
+import Movie from './views/movie';
+import Mine from './views/mine';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    return (
+      <Router>
+        <Switch>
+          <Route path="/movie">
+            <Movie />
+          </Route>
+          <Route path="/cinema">
+            <Cinema />
+          </Route>
+          <Route path="/mine">
+            <Mine />
+          </Route>
+          <Route path="/">
+            <Movie />
+          </Route>
+        </Switch>
+      </Router>
+    )
 }
-
-export default App;
