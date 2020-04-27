@@ -3,6 +3,7 @@ import axios from "axios";
 import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
+import { Link } from "react-router-dom";
 
 export default class NowPlaying extends React.Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export default class NowPlaying extends React.Component {
       isLoading: true,
       pullDownMsg: "",
       screenWidth: window.screen.width * 2,
+      index: 0,
     };
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
   }
@@ -23,17 +25,23 @@ export default class NowPlaying extends React.Component {
         movieList: res.data.data.movieList,
         isLoading: false,
       });
-      axios.get(`/api/movieComingList?cityId=${cityId}`).then((res) => {
-        this.setState({
-          comingList: res.data.data.comingList,
-        });
+    });
+    axios.get(`/api/movieComingList?cityId=${cityId}`).then((res) => {
+      this.setState({
+        comingList: res.data.data.comingList,
       });
     });
   }
-  /*   static getDerivedStateFromProps(prevProps, prevState, snapshot){
-      console.log(prevProps,prevState,snapshot)
-      return null
-  } */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.index !== this.props.index ||
+      this.state.index !== this.props.index
+    ) {
+      this.setState({
+        index: this.props.index,
+      });
+    }
+  }
 
   handleToTouchEnd(scroller) {
     this.setState({
@@ -41,7 +49,7 @@ export default class NowPlaying extends React.Component {
     });
     let cityId = 10;
     const url =
-      this.props.tabIndex === 0 ? "/api/movieOnInfoList" : "/api/movieComingList";
+      this.state.index === 0 ? "/api/movieOnInfoList" : "/api/movieComingList";
     axios
       .get(`${url}?cityId=${cityId}`)
       .then((res) => {
@@ -50,7 +58,7 @@ export default class NowPlaying extends React.Component {
           this.setState({ pullDownMsg: "更新成功" });
           scroller.finishPullDown();
           setTimeout(() => {
-            if (this.props.tabIndex === 0) {
+            if (this.state.index === 0) {
               this.setState({
                 movieList: [...data.movieList, ...this.state.movieList],
                 pullDownMsg: "",
@@ -58,7 +66,7 @@ export default class NowPlaying extends React.Component {
             } else {
               this.setState({
                 comingList: [...data.comingList, ...this.state.comingList],
-                pullDownMsg:""
+                pullDownMsg: "",
               });
             }
           }, 1000);
@@ -72,7 +80,7 @@ export default class NowPlaying extends React.Component {
   render() {
     return (
       <Scroller
-        tabIndex={this.props.tabIndex}
+        tabIndex={this.state.index}
         scrollX
         handleToTouchEnd={this.handleToTouchEnd}
         handleSlide={this.props.handleSlide}
@@ -110,9 +118,9 @@ function MovieItem(props) {
   return movieList.map((item, index) => {
     return (
       <li key={index}>
-        <div className="pic_show">
-          <img src={item.img.replace(/w\.h/, "128.180")} alt="" />
-        </div>
+        <Link to={`/detail/${item.id}`} className="pic_show">
+            <img src={item.img.replace(/w\.h/, "128.180")} alt="" />
+        </Link>
         <div className="info_list">
           <h2>{item.nm}</h2>
           <p>

@@ -8,32 +8,30 @@ export default class Scroller extends React.Component {
   }
   componentDidMount() {
     this.scroller = new BScroll(this.wrapperRef.current, {
-      tap: true,
+      click: true,
       probeType: 3,
-      scrollX:this.props.scrollX ? true : false,
+      scrollX: this.props.scrollX ? true : false,
       pullDownRefresh: {
         threshold: 30,
-        stop: 20
+        stop: 20,
       },
       snap: {
         loop: false,
-        threshold: 0.2
-       }
+        threshold: 0.2,
+      },
     });
     this.scroller.on("pullingDown", () => {
       this.props.handleToTouchEnd(this.scroller);
     });
-    this.scroller.on('scrollEnd',(pos)=>{
-        const tabIndex = pos.x === 0 ? 0 : 1;
-        console.log(tabIndex)
-        this.props.handleSlide && this.props.handleSlide(tabIndex);
-    })
+    this.scroller.on("scrollEnd", (pos) => {
+      const tabIndex = pos.x === 0 ? 0 : 1;
+      this.props.handleSlide && this.props.handleSlide(tabIndex);
+    });
   }
-  componentDidUpdate(prevProps){
-      if(this.props.scrollX && prevProps.tabIndex !== this.props.tabIndex){
-        console.log(this.scroller.getCurrentPage())
-          this.scroller.goToPage(this.props.tabIndex,0);
-      }
+  componentDidUpdate(prevProps) {
+    if (this.props.scrollX && prevProps.tabIndex !== this.props.tabIndex) {
+      this.scroller.goToPage(this.props.tabIndex, 0);
+    }
   }
   componentWillUnmount() {
     this.scroller.destroy();

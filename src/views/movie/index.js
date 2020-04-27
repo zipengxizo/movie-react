@@ -3,7 +3,7 @@ import React from "react";
 import {
   Switch,
   Route,
-  Redirect
+  Redirect,
   // useRouteMatch,
 } from "react-router-dom";
 
@@ -12,38 +12,39 @@ import NowPlaying from "../../component/nowPlaying";
 import Header from "../../component/header";
 import "./index.css";
 import Menu from "../../component/menu";
+import Research from "../../component/research";
+import City from "../../component/city";
 export default class Movie extends React.Component {
-  constructor(props){
-    super(props)
-    this.tabIndex = 0
+  constructor(props) {
+    super(props);
     this.state = {
-      selectBabIndex : -1
-    }
+      index: 0,
+    };
     this.handleSlide = this.handleSlide.bind(this);
   }
-  handleSlide(tabIndex){
+  handleSlide(index) {
     this.setState({
-      selectBabIndex : tabIndex
-    })
+      index: index,
+    });
   }
   render() {
     return (
       <div id="main">
         <Header title="电影" />
         <div id="content">
-          <Menu selectBabIndex={this.state.selectBabIndex} />
+          <Menu index={this.state.index} handleSlide={this.handleSlide} />
           <Switch>
             <Route path="/movie/city">
-              <div>city</div>
+              <City handleSlide={this.handleSlide} />
             </Route>
             <Route path="/movie/nowPlaying">
-              <NowPlaying tabIndex={this.tabIndex} handleSlide={this.handleSlide} />
-            </Route>
-            <Route path="/movie/comingSoon">
-              <NowPlaying tabIndex={this.tabIndex + 1 } handleSlide={this.handleSlide} />
+              <NowPlaying
+                index={this.state.index}
+                handleSlide={this.handleSlide}
+              />
             </Route>
             <Route path="/movie/search">
-              <div>research</div>
+              <Research handleSlide={this.handleSlide} />
             </Route>
             <Route path="/">
               <Redirect to="/movie/nowPlaying" />
@@ -55,17 +56,3 @@ export default class Movie extends React.Component {
     );
   }
 }
-
-/* function Menudiv({ label, to, activeOnlyWhenExact }) {
-  let match = useRouteMatch({
-    path: to,
-    exact: activeOnlyWhenExact,
-  });
-
-  return (
-    <div className={match ? "active" : ""}>
-      <div to={to}>{label}</div>
-    </div>
-  );
-}
- */

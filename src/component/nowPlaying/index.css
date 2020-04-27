@@ -8,6 +8,7 @@
   .movie_body ul {
     margin: 0 12px;
     overflow: hidden;
+    padding-bottom: 50px;
   }
   .movie_body ul li {
     margin-top: 12px;
@@ -18,7 +19,6 @@
   }
   .movie_body .pic_show {
     width: 64px;
-    height: 90px;
   }
   .movie_body .pic_show img {
     width: 100%;
