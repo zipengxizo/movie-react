@@ -4,8 +4,9 @@ import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
 import { Link } from "react-router-dom";
+import { CityContext } from "../../context/city";
 
-export default class NowPlaying extends React.Component {
+class NowPlaying extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,12 +20,19 @@ export default class NowPlaying extends React.Component {
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
   }
   componentDidMount() {
-    const cityId = 10;
+    const cityId = this.context.cityId;
     axios.get(`/api/movieOnInfoList?cityId=${cityId}`).then((res) => {
       this.setState({
         movieList: res.data.data.movieList,
         isLoading: false,
       });
+    }).catch((err)=>{
+      console.log(err);
+      throw new Error('接口连接失败');
+    }).finally(()=>{
+      this.setState({
+        isLoading : false
+      })
     });
     axios.get(`/api/movieComingList?cityId=${cityId}`).then((res) => {
       this.setState({
@@ -79,47 +87,51 @@ export default class NowPlaying extends React.Component {
   }
   render() {
     return (
-      <Scroller
-        tabIndex={this.state.index}
-        scrollX
-        handleToTouchEnd={this.handleToTouchEnd}
-        handleSlide={this.props.handleSlide}
-      >
-        <div
-          className="scrollX"
-          style={{ width: this.state.screenWidth + "px" }}
+        <Scroller
+          tabIndex={this.state.index}
+          scrollX
+          handleToTouchEnd={this.handleToTouchEnd}
+          handleSlide={this.props.handleSlide}
         >
-          <div className="movie_body" style={{ width: window.screen.width }}>
-            <Loading isLoading={this.state.isLoading} />
-            <Scroller handleToTouchEnd={this.handleToTouchEnd}>
-              <ul>
-                <li className="pullDown">{this.state.pullDownMsg}</li>
-                <MovieItem movieList={this.state.movieList} />
-              </ul>
-            </Scroller>
-          </div>
+          <div
+            className="scrollX"
+            style={{ width: this.state.screenWidth + "px" }}
+          >
+            <div className="movie_body" style={{ width: window.screen.width }}>
+              <Loading isLoading={this.state.isLoading} />
+              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+                <ul>
+                  <li className="pullDown">{this.state.pullDownMsg}</li>
+                  <MovieItem movieList={this.state.movieList} />
+                </ul>
+              </Scroller>
+            </div>
 
-          <div className="movie_body" style={{ width: window.screen.width }}>
-            <Loading isLoading={this.state.isLoading} />
-            <Scroller handleToTouchEnd={this.handleToTouchEnd}>
-              <ul>
-                <li className="pullDown">{this.state.pullDownMsg}</li>
-                <MovieItem movieList={this.state.comingList} />
-              </ul>
-            </Scroller>
+            <div className="movie_body" style={{ width: window.screen.width }}>
+              <Loading isLoading={this.state.isLoading} />
+              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+                <ul>
+                  <li className="pullDown">{this.state.pullDownMsg}</li>
+                  <MovieItem movieList={this.state.comingList} />
+                </ul>
+              </Scroller>
+            </div>
           </div>
-        </div>
-      </Scroller>
+        </Scroller>
     );
   }
 }
+
+NowPlaying.contextType = CityContext;
+export default NowPlaying
+
 function MovieItem(props) {
   const movieList = props.movieList;
   return movieList.map((item, index) => {
     return (
       <li key={index}>
         <Link to={`/detail/${item.id}`} className="pic_show">
-            <img src={item.img.replace(/w\.h/, "128.180")} alt="" />
+          <img src={item.img.replace(/w\.h/, "128.180")} alt="" />
         </Link>
         <div className="info_list">
           <h2>{item.nm}</h2>

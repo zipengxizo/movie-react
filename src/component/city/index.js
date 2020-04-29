@@ -4,9 +4,10 @@ import "./index.css";
 import Axios from "axios";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
-import { createBrowserHistory } from "history";
-const history = createBrowserHistory();
-export default class City extends React.Component {
+import history from "../../util/history";
+import { CityContext } from "../../context/city";
+
+ class City extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,11 +62,13 @@ export default class City extends React.Component {
   }
 
   handleToCity(cityName, cityId) {
-    console.log(cityName);
-    //this.$store.commit("city/CITY_INFO", { cityName, cityId });
+    //修改context中的cityid,cityName
+    console.log(this.props.history)
+    this.context.changeCityId(cityId,cityName);
     window.localStorage.setItem("nowNm", cityName);
     window.localStorage.setItem("nowId", cityId);
-    history.push("/movie/nowPlaying");
+    history.push("nowPlaying");
+    window.location.reload();
   }
 
   formatCityList(cities) {
@@ -116,41 +119,44 @@ export default class City extends React.Component {
   }
   render() {
     return (
-      <div className="city_body">
-        <div className="city_list">
-          <Loading isLoading={this.state.isLoading} />
-          <Scroller>
-            <div>
-              <div className="city_hot">
-                <h2>热门城市</h2>
-                <ul className="clearfix">
-                  <HotCities
-                    hotCities={this.state.hotList}
+        <div className="city_body">
+          <div className="city_list">
+            <Loading isLoading={this.state.isLoading} />
+            <Scroller>
+              <div>
+                <div className="city_hot">
+                  <h2>热门城市</h2>
+                  <ul className="clearfix">
+                    <HotCities
+                      hotCities={this.state.hotList}
+                      handleToCity={this.handleToCity}
+                    />
+                  </ul>
+                </div>
+                <div className="city_sort" ref={this.citySortRef}>
+                  <CitiesItem
+                    citiesList={this.state.cityList}
                     handleToCity={this.handleToCity}
                   />
-                </ul>
+                </div>
               </div>
-              <div className="city_sort" ref={this.citySortRef}>
-                <CitiesItem
-                  citiesList={this.state.cityList}
-                  handleToCity={this.handleToCity}
-                />
-              </div>
-            </div>
-          </Scroller>
+            </Scroller>
+          </div>
+          <div className="city_index">
+            <ul>
+              <CitiesIndex
+                citiesIndex={this.state.cityList}
+                handleToIndex={this.handleToIndex}
+              />
+            </ul>
+          </div>
         </div>
-        <div className="city_index">
-          <ul>
-            <CitiesIndex
-              citiesIndex={this.state.cityList}
-              handleToIndex={this.handleToIndex}
-            />
-          </ul>
-        </div>
-      </div>
     );
   }
 }
+
+City.contextType = CityContext;
+export default City
 
 function HotCities(props) {
   const { hotCities } = props;
