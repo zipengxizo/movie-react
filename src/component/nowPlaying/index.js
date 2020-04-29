@@ -112,7 +112,7 @@ class NowPlaying extends React.Component {
               <Scroller handleToTouchEnd={this.handleToTouchEnd}>
                 <ul>
                   <li className="pullDown">{this.state.pullDownMsg}</li>
-                  <MovieItem movieList={this.state.comingList} />
+                  <MovieComingItem comingList={this.state.comingList} />
                 </ul>
               </Scroller>
             </div>
@@ -124,6 +124,29 @@ class NowPlaying extends React.Component {
 
 NowPlaying.contextType = CityContext;
 export default NowPlaying
+
+function MovieComingItem(props) {
+  const comingList = props.comingList;
+  return comingList.map((item,index)=>{
+    return (
+      <li key={index}>
+        <Link to={`/detail/${item.id}`} className="pic_show">
+          <img src={item.img.replace(/w\.h/, "128.180")} alt="" />
+        </Link>
+        <div className="info_list">
+          <h2>{item.nm}</h2>
+          <p>
+            观众评
+            <span className="grade">{item.sc}</span>
+          </p>
+          <p>主演: {item.star}</p>
+          <p>{item.showInfo}</p>
+        </div>
+        <div className="btn_pre">预售</div>
+      </li>
+    )
+  })
+}
 
 function MovieItem(props) {
   const movieList = props.movieList;

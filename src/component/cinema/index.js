@@ -14,6 +14,8 @@ export default class CinemaList extends React.Component {
     };
   }
   componentDidMount() {
+    
+    throw new Error('test')
     const cityId = 10;
     axios
       .get(`/api/cinemaList?cityId=${cityId}`)

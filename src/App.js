@@ -32,7 +32,7 @@ export default class App extends React.Component {
     return (
       <ErrorBoundary>
         <CityContext.Provider value={this.state}>
-          <Router history={history}>
+          <Router history={history} basename='movie'>
             <Suspense fallback={<Loading isLoading />}>
               <Switch>
                 <Route path="/movie">
