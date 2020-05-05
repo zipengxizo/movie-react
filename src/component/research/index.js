@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class Research extends React.Component {
+export default class Research extends React.PureComponent {
   /* constructor(props) {
     super(props);
   } */

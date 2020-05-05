@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -27,7 +26,7 @@ export default class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginTop:'80px'}}>
-          <img style={{width:'64px',height:'64px'}} src={require('./error.png')} />
+          <img style={{width:'64px',height:'64px'}} src={require('./error.png')} alt="" />
           <h3 style={{textAlign:"center",paddingTop:'10px'}}>出错了,哭....</h3>
           <a href='/movie' style={{paddingTop:'20px'}}>返回首页</a>
           {/* <details style={{ whiteSpace: "pre-wrap",margin:'10px',width:'100%' }}>

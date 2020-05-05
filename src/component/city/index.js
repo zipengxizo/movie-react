@@ -196,7 +196,7 @@ function CitiesIndex(props) {
   const { citiesIndex } = props;
   return citiesIndex.map((item, index) => {
     return (
-      <li key={index} onClick={(e) => props.handleToIndex(item.index, e)}>
+      <li key={index} onClick={(e) => props.handleToIndex(index, e)}>
         {item.index}
       </li>
     );

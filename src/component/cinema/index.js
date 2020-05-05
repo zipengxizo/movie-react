@@ -14,8 +14,6 @@ export default class CinemaList extends React.Component {
     };
   }
   componentDidMount() {
-    
-    throw new Error('test')
     const cityId = 10;
     axios
       .get(`/api/cinemaList?cityId=${cityId}`)
@@ -100,9 +98,62 @@ function CinemaItem(props) {
           <span>{item.distance}</span>
         </div>
         <div className="card">
-          <div>{}</div>
+          <Card tags={item.tag} />
         </div>
       </li>
     );
   });
+}
+
+function Card(props) {
+  const tags = props.tags;
+  return Object.keys(tags).filter((item)=>{
+    return tags[item] === 1
+  }).map((item,index)=>{
+    const cardText = formatCard(item);
+    const classText = classCard(item);
+    return <div key={index} className={classText}>{cardText}</div>
+  })
+ /*  for (const key in tags) {
+    if (tags.hasOwnProperty(key)) {
+      const element = tags[key];
+      if(element === 1){
+        const cardText = formatCard(key);
+        const classText = classCard(key);
+        return (
+          <div key={key} className={classText}>{cardText}</div>
+        )
+      }
+    }
+  } */
+}
+
+
+function formatCard(key){
+  var card = [
+      { key : 'allowRefund' , value : '改签' },
+      { key : 'endorse' , value : '退' },
+      { key : 'sell' , value : '折扣卡' },
+      { key : 'snack' , value : '小吃'}
+  ];
+  for(var i=0;i<card.length;i++){
+      if(card[i].key === key){
+          return card[i].value;
+      }
+  }
+  return '';
+}
+function classCard(key){
+  var card = [
+      { key : 'allowRefund' , value : 'bl' },
+      { key : 'endorse' , value : 'bl' },
+      { key : 'sell' , value : 'or' },
+      { key : 'snack' , value : 'or'}
+  ];
+  for(var i=0;i<card.length;i++){
+      if(card[i].key === key){
+          return card[i].value;
+      }
+  }
+  return '';
 }

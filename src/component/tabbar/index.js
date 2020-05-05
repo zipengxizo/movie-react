@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default class TabBar extends React.Component {
   render() {
@@ -8,22 +8,22 @@ export default class TabBar extends React.Component {
       <footer id="footer">
         <ul>
           <li>
-            <Link to="/movie">
+            <NavLink to="/movie">
               <i className="iconfont icon-dianying"></i>
               <p>电影</p>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/cinema">
+            <NavLink to="/cinema">
               <i className="iconfont icon-yingyuan"></i>
               <p>影院</p>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/mine">
+            <NavLink to="/mine">
               <i className="iconfont icon-wode"></i>
               <p>我的</p>
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </footer>

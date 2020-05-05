@@ -21,7 +21,7 @@ export default class Scroller extends React.Component {
       },
     });
     this.scroller.on("pullingDown", () => {
-      this.props.handleToTouchEnd(this.scroller);
+      this.props.handleToTouchEnd && this.props.handleToTouchEnd(this.scroller);
     });
     this.scroller.on("scrollEnd", (pos) => {
       const tabIndex = pos.x === 0 ? 0 : 1;
