@@ -68,7 +68,7 @@ import { CityContext } from "../../context/city";
     window.localStorage.setItem("nowNm", cityName);
     window.localStorage.setItem("nowId", cityId);
     history.push("nowPlaying");
-    window.location.reload();
+    // window.location.reload();
   }
 
   formatCityList(cities) {

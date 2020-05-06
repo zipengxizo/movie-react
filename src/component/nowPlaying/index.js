@@ -29,10 +29,6 @@ class NowPlaying extends React.Component {
     }).catch((err)=>{
       console.log(err);
       throw new Error('接口连接失败');
-    }).finally(()=>{
-      this.setState({
-        isLoading : false
-      })
     });
     axios.get(`/api/movieComingList?cityId=${cityId}`).then((res) => {
       this.setState({

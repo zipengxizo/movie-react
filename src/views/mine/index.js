@@ -7,6 +7,7 @@ export default class Mine extends React.Component {
     return (
       <div>
         <Header title="个人中心" />
+        
         <TabBar />
       </div>
     );
