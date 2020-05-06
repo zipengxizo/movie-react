@@ -1,12 +1,13 @@
 import React, { Suspense } from "react";
-import { Switch, Route, Router } from "react-router-dom";
+import { Switch, Route, Router, Redirect } from "react-router-dom";
 import history from "./util/history";
 import { CityContext, city } from "./context/city";
 
 import { Loading } from "./component/loading";
 import ErrorBoundary from "./util/boundaries/errorBoundary";
 
-import {PrivateRoute} from './auth'
+import { PrivateRoute } from "./auth";
+import Admin from "./component/admin";
 import Login from "./component/login";
 const Detail = React.lazy(() => import("./component/nowPlaying/detail"));
 const Cinema = React.lazy(() => import("./views/cinema"));
@@ -43,18 +44,20 @@ export default class App extends React.Component {
                 <Route path="/cinema">
                   <Cinema />
                 </Route>
-                
                 <Route path="/login">
                   <Login />
                 </Route>
                 <PrivateRoute path="/mine">
                   <Mine />
                 </PrivateRoute>
+                <PrivateRoute path="/admin">
+                  <Admin />
+                </PrivateRoute>
                 <Suspense fallback={<Loading isLoading />}>
                   <Route path="/detail/:movieId" component={Detail}></Route>
                 </Suspense>
                 <Route path="/">
-                  <Movie />
+                  <Redirect to="/movie" />
                 </Route>
               </Switch>
             </Suspense>

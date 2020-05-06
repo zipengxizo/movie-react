@@ -4,7 +4,7 @@ export const Auth = {
     isAuthenticated: window.localStorage.getItem('token') ? true : false,
     authenticate(cb) {
       Auth.isAuthenticated = true;
-      setTimeout(cb, 100); // fake async
+      setTimeout(cb, 100);
     },
     signout(cb) {
       Auth.isAuthenticated = false;
