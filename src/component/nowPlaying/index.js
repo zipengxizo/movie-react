@@ -51,7 +51,7 @@ class NowPlaying extends React.Component {
     this.setState({
       pullDownMsg: "正在更新....",
     });
-    let cityId = 10;
+    let cityId = this.context.cityId;
     const url =
       this.state.index === 0 ? "/api/movieOnInfoList" : "/api/movieComingList";
     axios
@@ -79,7 +79,6 @@ class NowPlaying extends React.Component {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => {});
   }
   render() {
     return (

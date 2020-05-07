@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Button } from "antd";
 import "./index.css";
 import { Route, NavLink, Switch, Redirect } from "react-router-dom";
-// import 'antd/dist/antd.css';
+import history from '../../util/history'
 
 import {
   MenuUnfoldOutlined,
@@ -25,6 +25,11 @@ export default class SiderDemo extends React.Component {
       collapsed: !this.state.collapsed,
     });
   };
+  loginOut(){
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('username');
+    history.push('/login')
+  }
 
   render() {
     return (
@@ -79,6 +84,7 @@ export default class SiderDemo extends React.Component {
                 onClick: this.toggle,
               }
             )}
+            <Button type="link" onClick={()=>this.loginOut()} style={{float:'right',margin:'16px 16px 0 0'}}>退出</Button>
           </Header>
           <Content
             className="site-layout-background"
@@ -100,7 +106,7 @@ export default class SiderDemo extends React.Component {
                   <div>cinema</div>
                 </Route>
                 <Route path="/">
-                  <Redirect to="/admin" />
+                  <Redirect to="/admin/users" />
                 </Route>
               </Switch>
             </Suspense>

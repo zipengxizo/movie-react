@@ -1,11 +1,12 @@
 import React from "react";
 
 import "./index.css";
-import Axios from "axios";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
 import history from "../../util/history";
 import { CityContext } from "../../context/city";
+
+import api from '../../api'
 
  class City extends React.Component {
   constructor(props) {
@@ -39,7 +40,7 @@ import { CityContext } from "../../context/city";
 
   componentDidMount() {
     this.props.handleSlide && this.props.handleSlide(-1);
-    Axios.get(`/api/cityList`)
+    api.city.cityList()
       .then((res) => {
         const { msg, data } = res.data;
         if (msg === "ok") {

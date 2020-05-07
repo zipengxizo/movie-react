@@ -5,6 +5,7 @@ import { messageBox } from "../alert";
 import { Auth } from "../../auth";
 
 import "./index.css";
+import { Loading } from "../loading";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -13,9 +14,11 @@ export default class Login extends React.Component {
       username: "",
       password: "",
       verifyImg: "",
+      isLoading: false,
     };
     this.handleToVerifyImg = this.handleToVerifyImg.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.changeIsLoading = this.changeIsLoading.bind(this);
 
     this.img = React.createRef();
   }
@@ -26,6 +29,11 @@ export default class Login extends React.Component {
     this.setState({
       [name]: value,
     });
+  }
+  changeIsLoading(bol){
+    this.setState({
+      isLoading : bol
+    })
   }
 
   handleToVerifyImg(event) {
@@ -72,12 +80,13 @@ export default class Login extends React.Component {
           />
         </div>
         <div className="login_btn">
-          <LoginButton users={this.state} imgRef={this.img} />
+          <LoginButton users={this.state} imgRef={this.img} changeIsLoading={this.changeIsLoading} />
         </div>
         <div className="login_link">
           <Link to="/mine/register">立即注册</Link>
           <Link to="/mine/findPassword">找回密码</Link>
         </div>
+        <Loading isLoading={this.state.isLoading} />
       </div>
     );
   }
@@ -89,7 +98,8 @@ function LoginButton(props) {
   let history = useHistory();
   let location = useLocation();
   function handleToLogin() {
-    let { from } = location.state || { from: { pathname: "/movie" } };
+    props.changeIsLoading(true)
+    let { from } = location.state || { from: { pathname: "/admin" } };
     api.users
       .login({
         username: users.username,
@@ -104,6 +114,7 @@ function LoginButton(props) {
           window.localStorage.setItem("token", token);
           window.localStorage.setItem("username", username);
           // this.$store.commit("token/TOKEN", { token });
+          props.changeIsLoading(false);
           messageBox({
             title: "登录",
             content: "登录成功",

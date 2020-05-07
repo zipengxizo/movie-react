@@ -1,10 +1,11 @@
 import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
-import axios from "axios";
 import Scroller from "../scroller";
+import api from '../../api'
+import { CityContext } from "../../context/city";
 
-export default class CinemaList extends React.Component {
+class CinemaList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,11 +13,11 @@ export default class CinemaList extends React.Component {
       isLoading: true,
       pullDownMsg: "",
     };
+    this.handleToTouchEnd = this.handleToTouchEnd.bind(this)
   }
   componentDidMount() {
-    const cityId = 10;
-    axios
-      .get(`/api/cinemaList?cityId=${cityId}`)
+    const cityId = this.context.cityId;
+    api.cinema.cinemaList({cityId:cityId})
       .then((res) => {
         let { msg, data } = res.data;
         if (msg === "ok") {
@@ -29,19 +30,13 @@ export default class CinemaList extends React.Component {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
   }
   handleToTouchEnd(scroller) {
-      let cityId = 10;
+      let cityId = this.context.cityId;
       this.setState({
           pullDownMsg:'正在更新....'
       })
-      axios
-        .get(`/api/cinemaList?cityId=${cityId}`)
+      api.cinema.cinemaList({cityId:cityId})
         .then((res) => {
           let { msg, data } = res.data;
           if (msg === "ok") {
@@ -73,7 +68,7 @@ export default class CinemaList extends React.Component {
           handleToTouchEnd={this.handleToTouchEnd}
         >
           <ul>
-            <li className="pullDown">{this.state.pullDownMsg}</li>
+            <li className="pullDown" style={{textAlign:'center'}}>{this.state.pullDownMsg}</li>
             <CinemaItem cinemaList={this.state.cinemaList} />
           </ul>
         </Scroller>
@@ -81,6 +76,9 @@ export default class CinemaList extends React.Component {
     );
   }
 }
+
+CinemaList.contextType = CityContext
+export default  CinemaList
 
 function CinemaItem(props) {
   const cinemaList = props.cinemaList;
@@ -114,18 +112,6 @@ function Card(props) {
     const classText = classCard(item);
     return <div key={index} className={classText}>{cardText}</div>
   })
- /*  for (const key in tags) {
-    if (tags.hasOwnProperty(key)) {
-      const element = tags[key];
-      if(element === 1){
-        const cardText = formatCard(key);
-        const classText = classCard(key);
-        return (
-          <div key={key} className={classText}>{cardText}</div>
-        )
-      }
-    }
-  } */
 }
 
 

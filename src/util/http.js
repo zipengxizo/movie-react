@@ -4,20 +4,16 @@
  */
 import axios from 'axios';
 import history from './history'
-// import { Toast } from 'vant';
-// import 'vant/lib/index.css';
+
+import {message} from 'antd'
 
 
 /** 
  * 提示函数 
  * 禁止点击蒙层、显示一秒后关闭
  */
-const tip = msg => {    
-    /* Toast({        
-        message: msg,        
-        duration: 1000,        
-        forbidClick: true    
-    }); */
+const tip = msg => {
+    message.info(msg);
 }
 
 /** 
@@ -26,7 +22,7 @@ const tip = msg => {
  */
 const toLogin = (fullPath) => {
     history.replace({
-        path: '/mine/login',        
+        path: '/login',        
         query: {
             redirect: fullPath
         }
