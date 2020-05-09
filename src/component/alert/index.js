@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+
+const modalRoot = document.getElementById('modal-root');
+let div = document.createElement("div");
+
 class Alert extends React.Component {
   constructor(props) {
     super(props);
@@ -12,15 +16,17 @@ class Alert extends React.Component {
   }
   handleCancel1() {
     this.props.handleCancel && this.props.handleCancel();
-    this.setState({
+    modalRoot.removeChild(div);
+    /* this.setState({
       isShow : false
-    })
+    }) */
   }
   handleOk1() {
     this.props.handleOk && this.props.handleOk();
-    this.setState({
+    modalRoot.removeChild(div);
+    /* this.setState({
       isShow: false
-    })
+    }) */
   }
   render() {
     let cancel, ok;
@@ -30,7 +36,19 @@ class Alert extends React.Component {
     if (this.props.ok) {
       ok = <div onClick={this.handleOk1}>{this.props.ok}</div>;
     }
-    if (this.state.isShow) {
+
+    return (
+      <div className="messageBox">
+        <h2>{this.props.title}</h2>
+        <p>{this.props.content}</p>
+        <div>
+          {cancel}
+          {ok}
+        </div>
+      </div>
+    )
+
+    /* if (this.state.isShow) {
       return (
         <div className="messageBox">
           <h2>{this.props.title}</h2>
@@ -43,12 +61,11 @@ class Alert extends React.Component {
       );
     } else {
       return null;
-    }
+    } */
   }
 }
 
 export const messageBox = function (options) {
-  let div = document.createElement("div");
 
   let defaults = {
     //默认值
@@ -62,7 +79,8 @@ export const messageBox = function (options) {
 
   Object.assign(defaults, options);
 
-  document.body.appendChild(div);
+  // document.body.appendChild(div);
+  modalRoot.appendChild(div)
 
   ReactDOM.render(React.createElement(Alert, defaults), div);
 };

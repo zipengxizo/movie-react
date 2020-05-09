@@ -31,6 +31,12 @@ class CinemaList extends React.Component {
         console.log(err);
       })
   }
+  shouldComponentUpdate(nextProps,nextState){
+    console.log(nextState.cinemaList)
+    console.log(this.state.cinemaList)
+    console.log(nextState.cinemaList === this.state.cinemaList)
+    return true
+  }
   handleToTouchEnd(scroller) {
       let cityId = this.context.cityId;
       this.setState({
@@ -53,14 +59,11 @@ class CinemaList extends React.Component {
         .catch((err) => {
           console.log(err);
         })
-        .finally(() => {
-          this.setState({
-            isLoading: false,
-          });
-        });
   }
 
   render() {
+    
+    console.log(1111)
     return (
       <div className="cinema_body">
         <Loading isLoading={this.state.isLoading} />

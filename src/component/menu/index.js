@@ -10,6 +10,11 @@ export default class Menu extends React.Component {
       index: 0,
     };
   }
+  /* shouldComponentUpdate(nextProps){
+    if (this.props.index !== nextProps.index) {
+      return true;
+    }
+  } */
   componentDidUpdate(prevProps) {
     if (prevProps.index !== this.props.index) {
       this.setState({

@@ -37,6 +37,7 @@ export default class Scroller extends React.Component {
     this.scroller.destroy();
   }
   render() {
+    console.log(888)
     return (
       <div className="wrapper" ref={this.wrapperRef}>
         {this.props.children}

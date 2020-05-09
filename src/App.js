@@ -1,19 +1,11 @@
 import React, { Suspense } from "react";
-import { Switch, Route, Router, Redirect } from "react-router-dom";
+import { Router } from "react-router-dom";
 import history from "./util/history";
 import { CityContext, city } from "./context/city";
+import Interceptors from './util/interceptors'
 
 import { Loading } from "./component/loading";
 import ErrorBoundary from "./util/boundaries/errorBoundary";
-
-import { PrivateRoute } from "./auth";
-import Admin from "./component/admin";
-import Login from "./component/login";
-const Detail = React.lazy(() => import("./component/nowPlaying/detail"));
-const Cinema = React.lazy(() => import("./views/cinema"));
-const Movie = React.lazy(() => import("./views/movie"));
-const Mine = React.lazy(() => import("./views/mine"));
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -30,36 +22,13 @@ export default class App extends React.Component {
       changeCityId: this.changeCityId,
     };
   }
-
   render() {
     return (
       <ErrorBoundary>
         <CityContext.Provider value={this.state}>
           <Router history={history} basename="movie">
             <Suspense fallback={<Loading isLoading />}>
-              <Switch>
-                <Route path="/movie">
-                  <Movie />
-                </Route>
-                <Route path="/cinema">
-                  <Cinema />
-                </Route>
-                <Route path="/login">
-                  <Login />
-                </Route>
-                <PrivateRoute path="/mine">
-                  <Mine />
-                </PrivateRoute>
-                <PrivateRoute path="/admin">
-                  <Admin />
-                </PrivateRoute>
-                <Suspense fallback={<Loading isLoading />}>
-                  <Route path="/detail/:movieId" component={Detail}></Route>
-                </Suspense>
-                <Route path="/">
-                  <Redirect to="/movie" />
-                </Route>
-              </Switch>
+             <Interceptors />
             </Suspense>
           </Router>
         </CityContext.Provider>

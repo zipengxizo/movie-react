@@ -108,13 +108,13 @@ function LoginButton(props) {
       })
       .then((res) => {
         var status = res.data.status;
+        props.changeIsLoading(false);
         if (status === 0) {
           //设置token
           let { token, username } = res.data.data;
           window.localStorage.setItem("token", token);
           window.localStorage.setItem("username", username);
           // this.$store.commit("token/TOKEN", { token });
-          props.changeIsLoading(false);
           messageBox({
             title: "登录",
             content: "登录成功",

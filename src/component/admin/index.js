@@ -4,6 +4,8 @@ import "./index.css";
 import { Route, NavLink, Switch, Redirect } from "react-router-dom";
 import history from '../../util/history'
 
+import AdminMovie from "../admin/movie";
+
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -100,7 +102,7 @@ export default class SiderDemo extends React.Component {
                     <Users />
                 </Route>
                 <Route path="/admin/movie">
-                  <div>movie</div>
+                  <AdminMovie cityId='10' />
                 </Route>
                 <Route path="/admin/cinema">
                   <div>cinema</div>

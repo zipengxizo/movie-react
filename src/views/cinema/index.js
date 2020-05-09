@@ -5,7 +5,8 @@ import CinemaList from "../../component/cinema";
 
 import './index.css';
 
-export default class Cinema extends React.PureComponent {
+export default class Cinema extends React.Component {
+  
   render() {
     return (
       <div id="main">

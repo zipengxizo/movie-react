@@ -7,6 +7,14 @@ import api from "../../../api";
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: [],
+      pagination: {
+        current: 1,
+        pageSize: 10,
+      },
+      loading: false,
+    };
     this.columns = [
       {
         title: "注册日期",
@@ -70,14 +78,12 @@ export default class Users extends React.Component {
       },
     ];
   }
-  state = {
-    data: [],
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    },
-    loading: false,
-  };
+
+
+  shouldComponentUpdate(nextProps,nextState){
+    console.log(nextState.data)
+    return true
+  }
 
   componentDidMount() {
     const { pagination } = this.state;
@@ -148,6 +154,8 @@ export default class Users extends React.Component {
           message.loading("Action in progress..", 2.5).then(() => {
             const newData = [...this.state.data];
             newData[index].isFreeze = !row.isFreeze;
+            /* const newData = this.state.data;
+            newData[index].isFreeze = !row.isFreeze; */
             this.setState({
               data: newData,
             });
