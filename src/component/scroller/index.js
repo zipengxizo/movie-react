@@ -5,6 +5,7 @@ export default class Scroller extends React.Component {
   constructor(props) {
     super(props);
     this.wrapperRef = React.createRef();
+    this.screenHeight = document.documentElement.clientHeight -144;
   }
   componentDidMount() {
     this.scroller = new BScroll(this.wrapperRef.current, {
@@ -37,9 +38,8 @@ export default class Scroller extends React.Component {
     this.scroller.destroy();
   }
   render() {
-    console.log(888)
     return (
-      <div className="wrapper" ref={this.wrapperRef}>
+      <div className="wrapper" style={{height:this.screenHeight + 'px'}} ref={this.wrapperRef}>
         {this.props.children}
       </div>
     );

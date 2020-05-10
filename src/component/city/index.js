@@ -55,11 +55,6 @@ import api from '../../api'
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
   }
 
   handleToCity(cityName, cityId) {
