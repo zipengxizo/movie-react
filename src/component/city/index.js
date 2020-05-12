@@ -2,12 +2,9 @@ import React from "react";
 
 import "./index.css";
 import { Loading } from "../loading";
-import Scroller from "../scroller";
 import history from "../../util/history";
 import { CityContext } from "../../context/city";
-
 import api from '../../api'
-
  class City extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +16,8 @@ import api from '../../api'
     this.citySortRef = React.createRef();
     this.handleToIndex = this.handleToIndex.bind(this);
     this.handleToCity = this.handleToCity.bind(this);
+    props.cacheLifecycles.didCache(this.componentDidCache)
+    props.cacheLifecycles.didRecover(this.componentDidRecover)
   }
   componentDidUpdate() {
     this.generateScrollTop();
@@ -38,8 +37,16 @@ import api from '../../api'
     });
   }
 
+  componentDidCache = () => {
+    console.log('List cached');
+  }
+
+  componentDidRecover = () => {
+    this.context.changeTabIndex(-1)
+  }
+
   componentDidMount() {
-    this.props.handleSlide && this.props.handleSlide(-1);
+    this.context.changeTabIndex(-1);
     api.city.cityList()
       .then((res) => {
         const { msg, data } = res.data;
@@ -59,8 +66,8 @@ import api from '../../api'
 
   handleToCity(cityName, cityId) {
     //修改context中的cityid,cityName
-    console.log(this.props.history)
     this.context.changeCityId(cityId,cityName);
+    this.context.changeTabIndex(0);
     window.localStorage.setItem("nowNm", cityName);
     window.localStorage.setItem("nowId", cityId);
     history.push("nowPlaying");
@@ -114,11 +121,11 @@ import api from '../../api'
     };
   }
   render() {
+    
     return (
         <div className="city_body">
           <div className="city_list">
             <Loading isLoading={this.state.isLoading} />
-            <Scroller>
               <div>
                 <div className="city_hot">
                   <h2>热门城市</h2>
@@ -136,7 +143,6 @@ import api from '../../api'
                   />
                 </div>
               </div>
-            </Scroller>
           </div>
           <div className="city_index">
             <ul>
@@ -153,6 +159,20 @@ import api from '../../api'
 
 City.contextType = CityContext;
 export default City
+
+/* export default  function Context(){
+  return (
+    <CityContext.Consumer>
+      {city=>(
+        <TabContext.Consumer>
+          {tab=>(
+            <City city={city} tab={tab} />
+          )}
+        </TabContext.Consumer>
+      )}
+    </CityContext.Consumer>
+  )
+} */
 
 function HotCities(props) {
   const { hotCities } = props;

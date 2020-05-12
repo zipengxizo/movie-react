@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import {  Route, Switch, Redirect } from 'react-router-dom'
 
-import TabBar from "../../component/tabbar";
 import Header from "../../component/header";
 import Center from "../../component/center";
 
@@ -27,10 +26,7 @@ export default class Mine extends React.Component {
               </Route>
             </Switch>
           </Suspense>
-
-
         </div>
-        <TabBar />
       </div>
     );
   }

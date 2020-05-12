@@ -1,11 +1,13 @@
 import React from "react";
 import BScroll from "better-scroll";
 
-export default class Scroller extends React.Component {
+import { CityContext } from "../../context/city";
+
+class Scroller extends React.Component {
   constructor(props) {
     super(props);
     this.wrapperRef = React.createRef();
-    this.screenHeight = document.documentElement.clientHeight -144;
+    this.screenHeight = document.documentElement.clientHeight - 144;
   }
   componentDidMount() {
     this.scroller = new BScroll(this.wrapperRef.current, {
@@ -18,7 +20,7 @@ export default class Scroller extends React.Component {
       },
       snap: {
         loop: false,
-        threshold: 0.2,
+        threshold: 0.6,
       },
     });
     this.scroller.on("pullingDown", () => {
@@ -26,7 +28,7 @@ export default class Scroller extends React.Component {
     });
     this.scroller.on("scrollEnd", (pos) => {
       const tabIndex = pos.x === 0 ? 0 : 1;
-      this.props.handleSlide && this.props.handleSlide(tabIndex);
+      this.context.changeTabIndex(tabIndex);
     });
   }
   componentDidUpdate(prevProps) {
@@ -39,9 +41,15 @@ export default class Scroller extends React.Component {
   }
   render() {
     return (
-      <div className="wrapper" style={{height:this.screenHeight + 'px'}} ref={this.wrapperRef}>
+      <div
+        className="wrapper"
+        style={{ height: this.screenHeight + "px" }}
+        ref={this.wrapperRef}
+      >
         {this.props.children}
       </div>
     );
   }
 }
+Scroller.contextType = CityContext;
+export default Scroller;

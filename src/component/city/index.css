@@ -1,5 +1,5 @@
 #content .city_body {
-    margin-top: 45px;
+    margin: 45px 0;
     display: flex;
     width: 100%;
     position: absolute;
@@ -61,4 +61,10 @@
     width: 20px;
     text-align: center;
     border-left: 1px #e6e6e6 solid;
+  }
+  .city_body .city_index li{
+    line-height: 1.4;
+  }
+  .city-box{
+    height: 100%;
   }

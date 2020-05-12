@@ -2,10 +2,11 @@ import React, { Suspense } from "react";
 import { Router } from "react-router-dom";
 import history from "./util/history";
 import { CityContext, city } from "./context/city";
-import Interceptors from './util/interceptors'
+import Interceptors from "./util/interceptors";
 
 import { Loading } from "./component/loading";
 import ErrorBoundary from "./util/boundaries/errorBoundary";
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -16,10 +17,19 @@ export default class App extends React.Component {
         cityName: cityName,
       });
     };
+    this.changeTabIndex = (tabIndex) => {
+      if (this.state.tabIndex !== tabIndex) {
+        this.setState({
+          tabIndex: tabIndex,
+        });
+      }
+    };
     this.state = {
       cityId: city.cityId,
       cityName: city.cityName,
+      tabIndex: city.tabIndex,
       changeCityId: this.changeCityId,
+      changeTabIndex: this.changeTabIndex,
     };
   }
   render() {
@@ -28,7 +38,7 @@ export default class App extends React.Component {
         <CityContext.Provider value={this.state}>
           <Router history={history} basename="movie">
             <Suspense fallback={<Loading isLoading />}>
-             <Interceptors />
+              <Interceptors />
             </Suspense>
           </Router>
         </CityContext.Provider>

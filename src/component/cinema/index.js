@@ -32,9 +32,9 @@ class CinemaList extends React.Component {
       })
   }
   shouldComponentUpdate(nextProps,nextState){
-    console.log(nextState.cinemaList)
+    /* console.log(nextState.cinemaList)
     console.log(this.state.cinemaList)
-    console.log(nextState.cinemaList === this.state.cinemaList)
+    console.log(nextState.cinemaList === this.state.cinemaList) */
     return true
   }
   handleToTouchEnd(scroller) {
@@ -58,11 +58,14 @@ class CinemaList extends React.Component {
         })
         .catch((err) => {
           console.log(err);
+        }).finally(()=>{
+          this.setState({
+            isLoading : false
+          })
         })
   }
 
   render() {
-    
     console.log(1111)
     return (
       <div className="cinema_body">

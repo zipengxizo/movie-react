@@ -1,10 +1,11 @@
 import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
+import {CityContext} from '../../context/city'
 
 import axios from "axios";
 
-export default class Research extends React.PureComponent {
+class Research extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,10 +14,15 @@ export default class Research extends React.PureComponent {
       moviesList: [],
     };
     this.handleChange = this.handleChange.bind(this);
+    props.cacheLifecycles.didCache(this.componentDidCache)
+    props.cacheLifecycles.didRecover(this.componentDidRecover)
+  }
+  componentDidRecover = () => {
+    this.context.changeTabIndex(-1)
   }
 
   componentDidMount() {
-    this.props.handleSlide && this.props.handleSlide(-1);
+    this.context.changeTabIndex(-1);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -96,6 +102,9 @@ export default class Research extends React.PureComponent {
     );
   }
 }
+
+Research.contextType = CityContext;
+export default Research;
 
 function MovieSearch(props) {
   const moviesSearch = props.moviesList;

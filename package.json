@@ -17,6 +17,9 @@
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
+    "react-keep-alive": "^2.5.2",
+    "react-loadable": "^5.5.0",
+    "react-router-cache-route": "^1.8.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
@@ -41,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "antd-dayjs-webpack-plugin": "^1.0.0"
   }
 }

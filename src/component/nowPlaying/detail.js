@@ -1,8 +1,9 @@
 import React from "react";
 import Header from "../header";
 import { Loading } from "../loading";
-import Axios from "axios";
 import "./detail.css";
+import api from "../../api";
+import history from "../../util/history";
 
 export default class Detail extends React.Component {
   constructor(props) {
@@ -15,9 +16,9 @@ export default class Detail extends React.Component {
   }
 
   componentDidMount() {
-      console.log(this.detailPlayer.current)
     const movieId = this.props.match.params.movieId;
-    Axios.get(`/api/detailmovie?movieId=${movieId}`)
+    api.movie
+      .movieDetail({ movieId: movieId })
       .then((res) => {
         const { msg, data } = res.data;
         if (msg === "ok") {
@@ -40,18 +41,16 @@ export default class Detail extends React.Component {
       });
   }
   handleToBack() {
-    window.history.go(-1);
+    history.push('/movie/nowPlaying')
   }
 
   render() {
-    console.log(this.state.detailMovie);
-    return (
-      this.state.detailMovie && (
+    if (this.state.detailMovie) {
+      return (
         <div id="detailContrainer" className="slide-enter-active">
           <Header title="影片详情">
             <i className="iconfont icon-right" onClick={this.handleToBack}></i>
           </Header>
-          <Loading />
           <div id="content" className="contentDetail">
             <div className="detail_list">
               <div
@@ -94,8 +93,10 @@ export default class Detail extends React.Component {
             </div>
           </div>
         </div>
-      )
-    );
+      );
+    } else {
+      return <Loading isLoading />;
+    }
   }
 }
 
