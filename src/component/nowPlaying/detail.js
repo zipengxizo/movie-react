@@ -3,9 +3,10 @@ import Header from "../header";
 import { Loading } from "../loading";
 import "./detail.css";
 import api from "../../api";
-import history from "../../util/history";
+import { withRouter} from 'react-router-dom'
 
-export default class Detail extends React.Component {
+
+class Detail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,6 +14,7 @@ export default class Detail extends React.Component {
       detailMovie: null,
     };
     this.detailPlayer = React.createRef();
+    this.handleToBack = this.handleToBack.bind(this);
   }
 
   componentDidMount() {
@@ -41,7 +43,8 @@ export default class Detail extends React.Component {
       });
   }
   handleToBack() {
-    history.push('/movie/nowPlaying')
+    // history('/movie/nowPlaying');
+    this.props.history.push('/movie/nowPlaying');
   }
 
   render() {
@@ -112,3 +115,6 @@ function DetailPhotos(props) {
     );
   });
 }
+
+
+export default withRouter(Detail);

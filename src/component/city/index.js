@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import "./index.css";
 import { Loading } from "../loading";
-import history from "../../util/history";
 import { CityContext } from "../../context/city";
-import api from '../../api'
- class City extends React.Component {
+import api from "../../api";
+import { useHistory } from "react-router-dom";
+// import Scroller from "../scroller/index";
+class City extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,9 +16,8 @@ import api from '../../api'
     };
     this.citySortRef = React.createRef();
     this.handleToIndex = this.handleToIndex.bind(this);
-    this.handleToCity = this.handleToCity.bind(this);
-    props.cacheLifecycles.didCache(this.componentDidCache)
-    props.cacheLifecycles.didRecover(this.componentDidRecover)
+    props.cacheLifecycles.didCache(this.componentDidCache);
+    props.cacheLifecycles.didRecover(this.componentDidRecover);
   }
   componentDidUpdate() {
     this.generateScrollTop();
@@ -38,16 +38,17 @@ import api from '../../api'
   }
 
   componentDidCache = () => {
-    console.log('List cached');
-  }
+    console.log("List cached");
+  };
 
   componentDidRecover = () => {
-    this.context.changeTabIndex(-1)
-  }
+    this.context.changeTabIndex(-1);
+  };
 
   componentDidMount() {
     this.context.changeTabIndex(-1);
-    api.city.cityList()
+    api.city
+      .cityList()
       .then((res) => {
         const { msg, data } = res.data;
         if (msg === "ok") {
@@ -62,16 +63,11 @@ import api from '../../api'
       .catch((err) => {
         console.log(err);
       })
-  }
-
-  handleToCity(cityName, cityId) {
-    //修改context中的cityid,cityName
-    this.context.changeCityId(cityId,cityName);
-    this.context.changeTabIndex(0);
-    window.localStorage.setItem("nowNm", cityName);
-    window.localStorage.setItem("nowId", cityId);
-    history.push("nowPlaying");
-    // window.location.reload();
+      .finally(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
   }
 
   formatCityList(cities) {
@@ -121,44 +117,37 @@ import api from '../../api'
     };
   }
   render() {
-    
     return (
-        <div className="city_body">
-          <div className="city_list">
-            <Loading isLoading={this.state.isLoading} />
-              <div>
-                <div className="city_hot">
-                  <h2>热门城市</h2>
-                  <ul className="clearfix">
-                    <HotCities
-                      hotCities={this.state.hotList}
-                      handleToCity={this.handleToCity}
-                    />
-                  </ul>
-                </div>
-                <div className="city_sort" ref={this.citySortRef}>
-                  <CitiesItem
-                    citiesList={this.state.cityList}
-                    handleToCity={this.handleToCity}
-                  />
-                </div>
-              </div>
-          </div>
-          <div className="city_index">
-            <ul>
-              <CitiesIndex
-                citiesIndex={this.state.cityList}
-                handleToIndex={this.handleToIndex}
-              />
-            </ul>
-          </div>
+      <div className="city_body">
+        <Loading isLoading={this.state.isLoading} />
+        <div className="city_list">
+          {/* <Scroller> */}
+            <div className="city_hot">
+              <h2>热门城市</h2>
+              <ul className="clearfix">
+                <HotCities hotCities={this.state.hotList} />
+              </ul>
+            </div>
+            <div className="city_sort" ref={this.citySortRef}>
+              <CitiesItem citiesList={this.state.cityList} />
+            </div>
+          {/* </Scroller> */}
         </div>
+        <div className="city_index">
+          <ul>
+            <CitiesIndex
+              citiesIndex={this.state.cityList}
+              handleToIndex={this.handleToIndex}
+            />
+          </ul>
+        </div>
+      </div>
     );
   }
 }
 
 City.contextType = CityContext;
-export default City
+export default City;
 
 /* export default  function Context(){
   return (
@@ -175,10 +164,24 @@ export default City
 } */
 
 function HotCities(props) {
+  let history = useHistory();
+  const cityContext = useContext(CityContext);
   const { hotCities } = props;
+  function handleToCity(cityName, cityId) {
+    cityContext.changeCityId(cityId, cityName);
+    cityContext.changeTabIndex(0);
+    window.localStorage.setItem("nowNm", cityName);
+    window.localStorage.setItem("nowId", cityId);
+    history.push("nowPlaying");
+  }
   return hotCities.map((item, index) => {
     return (
-      <li key={index} onClick={(e) => props.handleToCity(item.nm, item.id, e)}>
+      <li
+        key={index}
+        onClick={() => {
+          handleToCity(item.nm, item.id);
+        }}
+      >
         {item.nm}
       </li>
     );
@@ -186,7 +189,16 @@ function HotCities(props) {
 }
 
 function CitiesItem(props) {
+  let history = useHistory();
+  const cityContext = useContext(CityContext);
   const { citiesList } = props;
+  function handleToCity(cityName, cityId) {
+    cityContext.changeCityId(cityId, cityName);
+    cityContext.changeTabIndex(0);
+    window.localStorage.setItem("nowNm", cityName);
+    window.localStorage.setItem("nowId", cityId);
+    history.push("nowPlaying");
+  }
   return citiesList.map((item, index) => {
     return (
       <div key={index}>
@@ -196,7 +208,9 @@ function CitiesItem(props) {
             return (
               <li
                 key={index}
-                onClick={(e) => props.handleToCity(item.nm, item.id, e)}
+                onClick={() => {
+                  handleToCity(item.nm, item.id);
+                }}
               >
                 {item.nm}
               </li>

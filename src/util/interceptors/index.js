@@ -48,9 +48,8 @@ class Interceptors extends React.Component {
       <>
         <CacheSwitch>
           <CacheRoute path="/movie" component={Movie} className="movie-box">
-            {/* <Movie /> */}
           </CacheRoute>
-          <CacheRoute path="/cinema" component={Cinema}>
+          <CacheRoute path="/cinema" component={Cinema} className="movie-box">
           </CacheRoute>
           <Route path="/login">
             <Login />

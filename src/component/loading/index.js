@@ -2,7 +2,18 @@ import React from "react";
 
 export function Loading(props) {
   if (props.isLoading) {
-    return <div className="loader"></div>;
+    return (
+      <div className="loadEffect">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    );
   }
   return null;
 }

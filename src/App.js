@@ -6,7 +6,8 @@ import Interceptors from "./util/interceptors";
 
 import { Loading } from "./component/loading";
 import ErrorBoundary from "./util/boundaries/errorBoundary";
-
+import { Provider } from "mobx-react";
+import stores from './store'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -33,15 +34,18 @@ export default class App extends React.Component {
     };
   }
   render() {
+    console.log({...stores})
     return (
       <ErrorBoundary>
-        <CityContext.Provider value={this.state}>
-          <Router history={history} basename="movie">
-            <Suspense fallback={<Loading isLoading />}>
-              <Interceptors />
-            </Suspense>
-          </Router>
-        </CityContext.Provider>
+        <Provider {...stores}>
+          <CityContext.Provider value={this.state}>
+            <Router history={history} basename="movie">
+              <Suspense fallback={<Loading isLoading />}>
+                <Interceptors />
+              </Suspense>
+            </Router>
+          </CityContext.Provider>
+        </Provider>
       </ErrorBoundary>
     );
   }

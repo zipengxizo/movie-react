@@ -4,24 +4,20 @@ import { Loading } from "../loading";
 import Scroller from "../scroller";
 import { CityContext } from "../../context/city";
 import { useHistory } from "react-router-dom";
-import api from "../../api";
+import {observer,inject} from 'mobx-react';
+@inject('movieStore')
+@observer
 class NowPlaying extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      movieList: [],
-      comingList: [],
-      isLoading: true,
-      pullDownMsg: "",
-      screenWidth: window.screen.width * 2,
-      prevCityid: -1,
-    };
+    this.store = this.props.movieStore;
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
     props.cacheLifecycles.didCache(this.componentDidCache);
     props.cacheLifecycles.didRecover(this.componentDidRecover);
   }
   componentDidMount() {
-    this.fetchMovies();
+    let cityId = this.context.cityId;
+    this.store.initData(cityId);
   }
   componentDidCache = () => {
     console.log("movie cached");
@@ -29,134 +25,51 @@ class NowPlaying extends React.Component {
 
   componentDidRecover = () => {
     console.log("movie recovered");
-    if (this.state.prevCityid === this.context.cityId) return;
-    this.setState({
-      isLoading: true,
-    });
-    this.fetchMovies();
+    if (this.store.prevCityid === this.context.cityId) return;
+    this.store.initData(this.context.cityId);
   };
 
-  fetchMovies() {
-    const cityId = this.context.cityId;
-    api.movie
-      .movieOnList({ cityId: cityId })
-      .then((res) => {
-        this.setState({
-          movieList: res.data.data.movieList,
-          prevCityid: this.context.cityId,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new Error("接口连接失败");
-      })
-      .finally(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
-    api.movie
-      .movieComingList({ cityId: cityId })
-      .then((res) => {
-        this.setState({
-          comingList: res.data.data.comingList,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
-  }
-
   handleToTouchEnd(scroller) {
-    this.setState({
-      pullDownMsg: "正在更新....",
-    });
-    let para = { cityId: this.context.cityId };
-    if (this.context.tabIndex === 0) {
-      api.movie
-        .movieOnList(para)
-        .then((res) => {
-          let { msg, data } = res.data;
-          if (msg === "ok") {
-            this.setState({ pullDownMsg: "更新成功" });
-            scroller.finishPullDown();
-            this.setState({
-              movieList: [...data.movieList, ...this.state.movieList],
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.setState({
-            pullDownMsg: "",
-          });
-        });
-    } else {
-      api.movie
-        .movieComingList(para)
-        .then((res) => {
-          let { msg, data } = res.data;
-          if (msg === "ok") {
-            this.setState({ pullDownMsg: "更新成功" });
-            scroller.finishPullDown();
-            this.setState({
-              comingList: [...data.comingList, ...this.state.comingList],
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.setState({
-            pullDownMsg: "",
-          });
-        });
-    }
+    let cityId = this.context.cityId;
+    let tabIndex = this.context.tabIndex;
+    this.store.pullData(cityId,tabIndex,scroller);
   }
   render() {
     return (
-      <Scroller
-        tabIndex={this.context.tabIndex}
-        scrollX
-        handleToTouchEnd={this.handleToTouchEnd}
-      >
-        <div
-          className="scrollX"
-          style={{ width: this.state.screenWidth + "px" }}
+      <>
+        <Loading isLoading={this.store.isLoading} />
+        <Scroller
+          tabIndex={this.context.tabIndex}
+          scrollX
+          handleToTouchEnd={this.handleToTouchEnd}
         >
-          <div className="movie_body" style={{ width: window.screen.width }}>
-            <Loading isLoading={this.state.isLoading} />
-            <Scroller handleToTouchEnd={this.handleToTouchEnd}>
-              <ul>
-                <li className="pullDown">{this.state.pullDownMsg}</li>
-                <MovieItem movieList={this.state.movieList} />
-              </ul>
-            </Scroller>
-          </div>
+          <div
+            className="scrollX"
+            style={{ width: this.store.screenWidth + "px" }}
+          >
+            <div className="movie_body" style={{ width: window.screen.width }}>
+              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+                <ul>
+                  <li className="pullDown">{this.store.pullDownMsg}</li>
+                  <MovieItem movieList={this.store.movieList} />
+                </ul>
+              </Scroller>
+            </div>
 
-          <div className="movie_body" style={{ width: window.screen.width }}>
-            <Loading isLoading={this.state.isLoading} />
-            <Scroller handleToTouchEnd={this.handleToTouchEnd}>
-              <ul>
-                <li className="pullDown">{this.state.pullDownMsg}</li>
-                <MovieComingItem comingList={this.state.comingList} />
-              </ul>
-            </Scroller>
+            <div className="movie_body" style={{ width: window.screen.width }}>
+              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+                <ul>
+                  <li className="pullDown">{this.store.pullDownMsg}</li>
+                  <MovieComingItem comingList={this.store.comingList} />
+                </ul>
+              </Scroller>
+            </div>
           </div>
-        </div>
-      </Scroller>
+        </Scroller>
+      </>
     );
   }
 }
-
 NowPlaying.contextType = CityContext;
 export default NowPlaying;
 
@@ -166,6 +79,7 @@ function MovieComingItem(props) {
     history.push(`/detail/${movieId}`);
   }
   const comingList = props.comingList;
+  // console.log(comingList.toJS())
   return comingList.map((item, index) => {
     return (
       <li key={index}>

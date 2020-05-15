@@ -13,6 +13,8 @@
     "better-scroll": "^1.15.2",
     "customize-cra": "^0.9.1",
     "http-proxy-middleware": "^1.0.3",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
     "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",

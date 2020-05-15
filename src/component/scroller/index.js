@@ -8,6 +8,7 @@ class Scroller extends React.Component {
     super(props);
     this.wrapperRef = React.createRef();
     this.screenHeight = document.documentElement.clientHeight - 144;
+    this.flag = true;
   }
   componentDidMount() {
     this.scroller = new BScroll(this.wrapperRef.current, {
@@ -27,8 +28,15 @@ class Scroller extends React.Component {
       this.props.handleToTouchEnd && this.props.handleToTouchEnd(this.scroller);
     });
     this.scroller.on("scrollEnd", (pos) => {
-      const tabIndex = pos.x === 0 ? 0 : 1;
-      this.context.changeTabIndex(tabIndex);
+      if(pos.x === 0 && pos.y === 0 && this.flag){
+        this.context.changeTabIndex(0);
+      }
+      else if(pos.x === -window.screen.width && pos.y === 0){
+        this.context.changeTabIndex(1)
+      }
+      else{
+        this.flag = false;
+      }
     });
   }
   componentDidUpdate(prevProps) {
