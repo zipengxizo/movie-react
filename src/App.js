@@ -34,7 +34,6 @@ export default class App extends React.Component {
     };
   }
   render() {
-    console.log({...stores})
     return (
       <ErrorBoundary>
         <Provider {...stores}>

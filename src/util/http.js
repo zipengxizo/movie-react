@@ -5,7 +5,9 @@
 import axios from 'axios';
 import history from './history'
 
-import {message} from 'antd'
+import {message} from 'antd';
+import store from '../store';
+let {globalStore} = store;
 
 
 /** 
@@ -39,7 +41,8 @@ const errorHandle = (status, response) => {
     switch (status) {
         // 401: 未登录状态，跳转登录页
         case 403:
-            tip('登录过期，请重新登录')
+            tip('登录过期，请重新登录');
+            window.localStorage.removeItem('token');
             toLogin(response.data.fullPath);
             break;
         // 403 token过期
@@ -47,24 +50,27 @@ const errorHandle = (status, response) => {
         case 401:
             tip('登录过期，请重新登录');
             window.localStorage.removeItem('token');
+            toLogin(response.data.fullPath);
             break;
         // 404请求不存在
         case 404:
             tip('请求的资源不存在'); 
             break;
         default:
-            console.log(response.data.message);
             tip('网络断开,稍后请重试');
         }}
 
 // 创建axios实例
-var instance = axios.create({timeout: 1000 * 10});
+let instance = axios.create({timeout: 1000 * 6});
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 /** 
  * 请求拦截器 
  * 每次请求前，如果存在token则在请求头中携带token 
  */ 
+let cancelToken = axios.CancelToken;
+let cancel = null;
+// let cancelToken = axios.CancelToken;
 instance.interceptors.request.use(    
     config => {        
         // 登录流程控制中，根据本地是否存在token判断用户的登录情况        
@@ -75,6 +81,9 @@ instance.interceptors.request.use(
         const token = window.localStorage.getItem('token');    
         // token && (config.headers.Authorization = token);  
         token && (config.headers.token = token);
+        config.cancelToken = new cancelToken((c) => {
+            cancel = c;
+          });
         return config;    
     },    
     error => Promise.error(error))
@@ -99,10 +108,13 @@ instance.interceptors.response.use(
             //    store.commit('changeNetwork', false);
             }
             tip('网络异常');
+            !globalStore.isNetwork && globalStore.toggle();
             return Promise.reject(error);
         }
     });
 
 export default instance;
+
+export {cancel};
 
 

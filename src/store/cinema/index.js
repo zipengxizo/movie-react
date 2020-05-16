@@ -5,14 +5,13 @@ export default class CinemaStore {
     @observable isLoading = true;
     @observable pullDownMsg = "";
     @action initData = (cityId) => {
+      this.isLoading = true;
       api.cinema
         .cinemaList({ cityId: cityId })
         .then((res) => {
           let { msg, data } = res.data;
           if (msg === "ok") {
-            // runInAction("获取内容", () => {
               this.cinemaList = data.cinemas;
-            // });
           }
         })
         .catch((err) => {

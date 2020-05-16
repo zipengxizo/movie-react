@@ -1,17 +1,22 @@
 import React from "react";
+import {withRouter } from "react-router-dom";
 import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
 import { CityContext } from "../../context/city";
-import { observer,inject} from "mobx-react";
+import { observer, inject } from "mobx-react";
+import Model from "../model/index";
+import Network from "../network/index";
 
-@inject('cinemaStore')
+@inject("cinemaStore", "globalStore")
 @observer
 class CinemaList extends React.Component {
   constructor(props) {
     super(props);
     this.store = this.props.cinemaStore;
+    this.globalStore = this.props.globalStore;
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
+    this.handleReload = this.handleReload.bind(this);
   }
   componentDidMount() {
     const cityId = this.context.cityId;
@@ -19,15 +24,24 @@ class CinemaList extends React.Component {
   }
   handleToTouchEnd(scroller) {
     let cityId = this.context.cityId;
-    this.store.pullData(cityId,scroller);
-    
+    this.store.pullData(cityId, scroller);
+  }
+  handleReload() {
+    this.globalStore.toggle();
+    let cityId = this.context.cityId;
+    this.store.initData(cityId);
   }
 
   render() {
-    console.log(this.store.cinemaList);
+    let isNetwork = this.globalStore.isNetwork;
     return (
-      <div className="cinema_body">
+      <div className="cinema_body" onClick={this.handleReload}>
         <Loading isLoading={this.store.isLoading} />
+        {isNetwork && (
+          <Model>
+            <Network />
+          </Model>
+        )}
         <Scroller handleToTouchEnd={this.handleToTouchEnd}>
           <ul>
             <li className="pullDown" style={{ textAlign: "center" }}>
@@ -42,7 +56,7 @@ class CinemaList extends React.Component {
 }
 
 CinemaList.contextType = CityContext;
-export default CinemaList;
+export default withRouter(CinemaList);
 
 function CinemaItem(props) {
   const cinemaList = props.cinemaList;

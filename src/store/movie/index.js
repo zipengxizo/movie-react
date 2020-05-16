@@ -9,30 +9,21 @@ export default class MovieStore {
   @observable prevCityid = -1;
   @action initData = (cityId) => {
     this.isLoading = true;
-    api.movie
-      .movieOnList({ cityId: cityId })
-      .then((res) => {
-        this.movieList = res.data.data.movieList;
-        this.prevCityid = this.cityId;
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new Error("接口连接失败");
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
-    api.movie
-      .movieComingList({ cityId: cityId })
-      .then((res) => {
-        this.comingList = res.data.data.comingList;
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
+    api.movie.movieList({cityId:cityId}).then(([res,res2])=>{
+      console.log(res,res2);
+      let {movieList} = res.data.data;
+      let {comingList} = res2.data.data;
+
+      this.prevCityid = this.cityId;
+      this.movieList = movieList;
+      this.comingList = comingList;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
   };
 
   @action pullData = (cityId, tabIndex, scroller) => {

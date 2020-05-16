@@ -5,7 +5,15 @@ import axios from '../util/http';
  * movie模块接口列表
  */
 
-const movie = {    
+const movie = {
+    /**
+     * 返回正在上映和即将上映
+     * @param {城市id} arg 
+     */
+    movieList(arg){
+        return Promise.all([this.movieOnList(arg),this.movieComingList(arg)]);
+
+    },    
     // 正在热映    
     movieOnList (arg) { 
         return axios.get(`${base.api1}/movieOnInfoList`,{

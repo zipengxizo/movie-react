@@ -47,21 +47,6 @@ class Alert extends React.Component {
         </div>
       </div>
     )
-
-    /* if (this.state.isShow) {
-      return (
-        <div className="messageBox">
-          <h2>{this.props.title}</h2>
-          <p>{this.props.content}</p>
-          <div>
-            {cancel}
-            {ok}
-          </div>
-        </div>
-      );
-    } else {
-      return null;
-    } */
   }
 }
 

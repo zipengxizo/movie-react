@@ -4,14 +4,18 @@ import { Loading } from "../loading";
 import Scroller from "../scroller";
 import { CityContext } from "../../context/city";
 import { useHistory } from "react-router-dom";
-import {observer,inject} from 'mobx-react';
-@inject('movieStore')
+import { observer, inject } from "mobx-react";
+import Model from "../model/index";
+import Network from "../network/index";
+@inject("movieStore", "globalStore")
 @observer
 class NowPlaying extends React.Component {
   constructor(props) {
     super(props);
     this.store = this.props.movieStore;
+    this.globalStore = this.props.globalStore;
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
+    this.handleReload = this.handleReload.bind(this);
     props.cacheLifecycles.didCache(this.componentDidCache);
     props.cacheLifecycles.didRecover(this.componentDidRecover);
   }
@@ -19,12 +23,7 @@ class NowPlaying extends React.Component {
     let cityId = this.context.cityId;
     this.store.initData(cityId);
   }
-  componentDidCache = () => {
-    console.log("movie cached");
-  };
-
   componentDidRecover = () => {
-    console.log("movie recovered");
     if (this.store.prevCityid === this.context.cityId) return;
     this.store.initData(this.context.cityId);
   };
@@ -32,12 +31,20 @@ class NowPlaying extends React.Component {
   handleToTouchEnd(scroller) {
     let cityId = this.context.cityId;
     let tabIndex = this.context.tabIndex;
-    this.store.pullData(cityId,tabIndex,scroller);
+    this.store.pullData(cityId, tabIndex, scroller);
+  }
+  handleReload() {
+    console.log("reload");
+    this.globalStore.toggle();
+    let cityId = this.context.cityId;
+    this.store.initData(cityId);
   }
   render() {
+    let isNetwork = this.globalStore.isNetwork;
     return (
-      <>
+      <React.Fragment>
         <Loading isLoading={this.store.isLoading} />
+
         <Scroller
           tabIndex={this.context.tabIndex}
           scrollX
@@ -45,8 +52,14 @@ class NowPlaying extends React.Component {
         >
           <div
             className="scrollX"
+            onClick={this.handleReload}
             style={{ width: this.store.screenWidth + "px" }}
           >
+            {isNetwork && (
+              <Model>
+                <Network />
+              </Model>
+            )}
             <div className="movie_body" style={{ width: window.screen.width }}>
               <Scroller handleToTouchEnd={this.handleToTouchEnd}>
                 <ul>
@@ -66,7 +79,7 @@ class NowPlaying extends React.Component {
             </div>
           </div>
         </Scroller>
-      </>
+      </React.Fragment>
     );
   }
 }

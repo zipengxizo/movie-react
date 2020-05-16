@@ -1,0 +1,21 @@
+.modal {
+    background-color: rgba(0,0,0,0.01);
+    position: fixed;
+    width: 100%;
+    top: 50px;
+    left: 0;
+    bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reload-btn{
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    padding: 2px 10px;
+    border-radius: 2px;
+    border: none;
+    color: #666;
+  }
