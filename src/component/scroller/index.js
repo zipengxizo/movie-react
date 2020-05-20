@@ -1,11 +1,15 @@
 import React from "react";
 import BScroll from "better-scroll";
+import { observer, inject } from "mobx-react";
 
-import { CityContext } from "../../context/city";
+// import { CityContext } from "../../context/city";
 
+@inject("globalStore")
+@observer
 class Scroller extends React.Component {
   constructor(props) {
     super(props);
+    this.globalStore = this.props.globalStore;
     this.wrapperRef = React.createRef();
     this.screenHeight = document.documentElement.clientHeight - 144;
     this.flag = true;
@@ -29,15 +33,20 @@ class Scroller extends React.Component {
     });
     this.scroller.on("scrollEnd", (pos) => {
       if(pos.x === 0 && pos.y === 0 && this.flag){
-        this.context.changeTabIndex(0);
+        this.globalStore.changeTabIndex(0);
+        // this.context.changeTabIndex(0);
       }
       else if(pos.x === -window.screen.width && pos.y === 0){
-        this.context.changeTabIndex(1)
+        this.globalStore.changeTabIndex(1);
+        // this.context.changeTabIndex(1)
       }
       else{
         this.flag = false;
       }
     });
+    this.scroller.on("scroll",()=>{
+      this.props.handleforceCheck && this.props.handleforceCheck();
+    })
   }
   componentDidUpdate(prevProps) {
     if (this.props.scrollX && prevProps.tabIndex !== this.props.tabIndex) {
@@ -59,5 +68,5 @@ class Scroller extends React.Component {
     );
   }
 }
-Scroller.contextType = CityContext;
+// Scroller.contextType = CityContext;
 export default Scroller;

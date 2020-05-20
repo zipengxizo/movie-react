@@ -1,10 +1,11 @@
 import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
-import {CityContext} from '../../context/city'
-
+import { observer, inject } from "mobx-react";
+// import {CityContext} from '../../context/city';
 import axios from "axios";
-
+@inject("globalStore")
+@observer
 class Research extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -13,16 +14,19 @@ class Research extends React.PureComponent {
       message: "",
       moviesList: [],
     };
+    this.globalStore = this.props.globalStore;
     this.handleChange = this.handleChange.bind(this);
     props.cacheLifecycles.didCache(this.componentDidCache)
     props.cacheLifecycles.didRecover(this.componentDidRecover)
   }
   componentDidRecover = () => {
-    this.context.changeTabIndex(-1)
+    this.globalStore.changeTabIndex(-1)
+    // this.context.changeTabIndex(-1);
   }
 
   componentDidMount() {
-    this.context.changeTabIndex(-1);
+    this.globalStore.changeTabIndex(-1);
+    // this.context.changeTabIndex(-1);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -46,7 +50,7 @@ class Research extends React.PureComponent {
     this.setState({
       isLoading: true,
     });
-    const cityId = 1;
+    const cityId = this.globalStore.cityId
     axios
       .get("/api/searchList?cityId=" + cityId + "&kw=" + newVal, {
         cancelToken: new axios.CancelToken((c) => {
@@ -103,7 +107,7 @@ class Research extends React.PureComponent {
   }
 }
 
-Research.contextType = CityContext;
+// Research.contextType = CityContext;
 export default Research;
 
 function MovieSearch(props) {

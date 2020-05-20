@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import "./index.css";
 import { Loading } from "../loading";
 import { CityContext } from "../../context/city";
 import api from "../../api";
 import { useHistory } from "react-router-dom";
+import { observer, inject } from "mobx-react";
 // import Scroller from "../scroller/index";
+@inject("globalStore")
+@observer
 class City extends React.Component {
   constructor(props) {
     super(props);
+    this.globalStore = this.props.globalStore;
     this.state = {
       isLoading: true,
       cityList: [],
@@ -24,7 +28,6 @@ class City extends React.Component {
   }
 
   handleToIndex(index) {
-    console.log(index);
     let offsetTop = this.offsetTopArr[index];
     this.citySortRef.current.parentNode.style.transform =
       "translateY(" + -offsetTop + "px)";
@@ -42,11 +45,13 @@ class City extends React.Component {
   };
 
   componentDidRecover = () => {
-    this.context.changeTabIndex(-1);
+    // this.context.changeTabIndex(-1);
+    this.globalStore.changeTabIndex(-1);
   };
 
   componentDidMount() {
-    this.context.changeTabIndex(-1);
+    // this.context.changeTabIndex(-1);
+    this.globalStore.changeTabIndex(-1);
     api.city
       .cityList()
       .then((res) => {
@@ -122,15 +127,15 @@ class City extends React.Component {
         <Loading isLoading={this.state.isLoading} />
         <div className="city_list">
           {/* <Scroller> */}
-            <div className="city_hot">
-              <h2>热门城市</h2>
-              <ul className="clearfix">
-                <HotCities hotCities={this.state.hotList} />
-              </ul>
-            </div>
-            <div className="city_sort" ref={this.citySortRef}>
-              <CitiesItem citiesList={this.state.cityList} />
-            </div>
+          <div className="city_hot">
+            <h2>热门城市</h2>
+            <ul className="clearfix">
+              <HotCities hotCities={this.state.hotList} />
+            </ul>
+          </div>
+          <div className="city_sort" ref={this.citySortRef}>
+            <CitiesItem citiesList={this.state.cityList} />
+          </div>
           {/* </Scroller> */}
         </div>
         <div className="city_index">
@@ -162,8 +167,32 @@ export default City;
     </CityContext.Consumer>
   )
 } */
+let HotCities = inject("globalStore")(
+  observer(({ globalStore, hotCities }) => {
+    let history = useHistory();
+    function handleToCity(cityName, cityId) {
+      globalStore.changeCityId(cityId,cityName);
+      globalStore.changeTabIndex(0);
+      window.localStorage.setItem("nowNm", cityName);
+      window.localStorage.setItem("nowId", cityId);
+      history.push("nowPlaying");
+    }
+    return hotCities.map((item, index) => {
+      return (
+        <li
+          key={index}
+          onClick={() => {
+            handleToCity(item.nm, item.id);
+          }}
+        >
+          {item.nm}
+        </li>
+      );
+    });
+  })
+);
 
-function HotCities(props) {
+/* function HotCities(props) {
   let history = useHistory();
   const cityContext = useContext(CityContext);
   const { hotCities } = props;
@@ -186,9 +215,50 @@ function HotCities(props) {
       </li>
     );
   });
-}
+} */
+/**
+ * mobx 方式
+ */
 
-function CitiesItem(props) {
+let CitiesItem = inject("globalStore")(
+  observer(({ globalStore, citiesList }) => {
+    let history = useHistory();
+    function handleToCity(cityName, cityId) {
+      globalStore.changeCityId(cityId, cityName);
+      globalStore.changeTabIndex(0);
+      window.localStorage.setItem("nowNm", cityName);
+      window.localStorage.setItem("nowId", cityId);
+      history.push("nowPlaying");
+    }
+    return citiesList.map((item, index) => {
+      return (
+        <div key={index}>
+          <h2>{item.index}</h2>
+          <ul>
+            {item.list.map((item, index) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => {
+                    handleToCity(item.nm, item.id);
+                  }}
+                >
+                  {item.nm}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    });
+  })
+);
+/**
+ * contenxt 方式
+ * @param {*} props
+ */
+
+/* function CitiesItem(props) {
   let history = useHistory();
   const cityContext = useContext(CityContext);
   const { citiesList } = props;
@@ -220,7 +290,7 @@ function CitiesItem(props) {
       </div>
     );
   });
-}
+} */
 
 function CitiesIndex(props) {
   const { citiesIndex } = props;

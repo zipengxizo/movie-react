@@ -44,7 +44,8 @@ class Detail extends React.Component {
   }
   handleToBack() {
     // history('/movie/nowPlaying');
-    this.props.history.push('/movie/nowPlaying');
+    // this.props.history.push('/movie/nowPlaying');
+    this.props.history.goBack();
   }
 
   render() {
@@ -78,7 +79,7 @@ class Detail extends React.Component {
                   <p>{this.state.detailMovie.enm}</p>
                   <p>{this.state.detailMovie.sc}</p>
                   <p>{this.state.detailMovie.cat}</p>
-                  <p>{this.state.srcAnddur}</p>
+                  <p>{this.state.detailMovie.srcAnddur}</p>
                   <p>{this.state.detailMovie.pubDesc}</p>
                 </div>
               </div>

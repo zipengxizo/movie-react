@@ -2,11 +2,13 @@ import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
-import { CityContext } from "../../context/city";
-import { useHistory } from "react-router-dom";
+// import { CityContext } from "../../context/city";
+import { useHistory} from "react-router-dom";
 import { observer, inject } from "mobx-react";
 import Model from "../model/index";
 import Network from "../network/index";
+import LazyLoad,{forceCheck } from "react-lazyload";
+
 @inject("movieStore", "globalStore")
 @observer
 class NowPlaying extends React.Component {
@@ -15,29 +17,37 @@ class NowPlaying extends React.Component {
     this.store = this.props.movieStore;
     this.globalStore = this.props.globalStore;
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
+    this.handleforceCheck = this.handleforceCheck.bind(this);
     this.handleReload = this.handleReload.bind(this);
     props.cacheLifecycles.didCache(this.componentDidCache);
     props.cacheLifecycles.didRecover(this.componentDidRecover);
   }
   componentDidMount() {
-    let cityId = this.context.cityId;
+    // let cityId = this.context.cityId;
+    let cityId = this.globalStore.cityId;
     this.store.initData(cityId);
   }
   componentDidRecover = () => {
-    if (this.store.prevCityid === this.context.cityId) return;
-    this.store.initData(this.context.cityId);
+    if (this.store.prevCityid === this.globalStore.cityId) return;
+    this.store.initData(this.globalStore.cityId);
   };
 
   handleToTouchEnd(scroller) {
-    let cityId = this.context.cityId;
-    let tabIndex = this.context.tabIndex;
+    /* let cityId = this.context.cityId;
+    let tabIndex = this.context.tabIndex; */
+    let cityId = this.globalStore.cityId;
+    let tabIndex = this.globalStore.tabIndex;
     this.store.pullData(cityId, tabIndex, scroller);
   }
-  handleReload() {
-    console.log("reload");
-    this.globalStore.toggle();
-    let cityId = this.context.cityId;
-    this.store.initData(cityId);
+  handleforceCheck(){
+    forceCheck();
+  }
+  handleReload(e) {
+    if (this.globalStore.isNetwork) {
+      this.globalStore.hidden();
+      let cityId = this.globalStore.cityId;
+      this.store.initData(cityId);
+    }
   }
   render() {
     let isNetwork = this.globalStore.isNetwork;
@@ -46,9 +56,10 @@ class NowPlaying extends React.Component {
         <Loading isLoading={this.store.isLoading} />
 
         <Scroller
-          tabIndex={this.context.tabIndex}
+          tabIndex={this.globalStore.tabIndex}
           scrollX
           handleToTouchEnd={this.handleToTouchEnd}
+          handleforceCheck={this.handleforceCheck}
         >
           <div
             className="scrollX"
@@ -83,7 +94,7 @@ class NowPlaying extends React.Component {
     );
   }
 }
-NowPlaying.contextType = CityContext;
+// NowPlaying.contextType = CityContext;
 export default NowPlaying;
 
 function MovieComingItem(props) {
@@ -97,11 +108,18 @@ function MovieComingItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <img
+          <LazyLoad height={60}>
+            <img
+              onClick={goDetail.bind(null, item.id)}
+              src={item.img.replace(/w\.h/, "128.180")}
+              alt=""
+            />
+          </LazyLoad>
+          {/* <img
             src={item.img.replace(/w\.h/, "128.180")}
             onClick={goDetail.bind(null, item.id)}
             alt=""
-          />
+          /> */}
         </div>
         <div className="info_list">
           <h2>{item.nm}</h2>
@@ -128,11 +146,18 @@ function MovieItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <img
+          <LazyLoad height={60}>
+            <img
+              onClick={goDetail.bind(null, item.id)}
+              src={item.img.replace(/w\.h/, "128.180")}
+              alt=""
+            />
+          </LazyLoad>
+          {/* <img
             src={item.img.replace(/w\.h/, "128.180")}
             onClick={goDetail.bind(null, item.id)}
             alt=""
-          />
+          /> */}
         </div>
         <div className="info_list">
           <h2>{item.nm}</h2>

@@ -10,7 +10,6 @@ export default class MovieStore {
   @action initData = (cityId) => {
     this.isLoading = true;
     api.movie.movieList({cityId:cityId}).then(([res,res2])=>{
-      console.log(res,res2);
       let {movieList} = res.data.data;
       let {comingList} = res2.data.data;
 
