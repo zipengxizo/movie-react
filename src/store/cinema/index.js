@@ -1,10 +1,12 @@
 import {observable,action} from 'mobx'
-import api from '../../api'
+import api from '@/api'
 export default class CinemaStore {
     @observable cinemaList = [];
     @observable isLoading = true;
     @observable pullDownMsg = "";
+    @observable preCityId = -1;
     @action initData = (cityId) => {
+      if(Number(cityId) === this.preCityId) return false;
       this.isLoading = true;
       api.cinema
         .cinemaList({ cityId: cityId })
@@ -12,6 +14,7 @@ export default class CinemaStore {
           let { msg, data } = res.data;
           if (msg === "ok") {
               this.cinemaList = data.cinemas;
+              this.preCityId = cityId;
           }
         })
         .catch((err) => {

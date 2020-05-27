@@ -2,8 +2,8 @@ import React from "react";
 
 import "./index.css";
 import { Loading } from "../loading";
-import { CityContext } from "../../context/city";
-import api from "../../api";
+import { CityContext } from "@/context/city";
+import api from "@/api";
 import { useHistory } from "react-router-dom";
 import { observer, inject } from "mobx-react";
 // import Scroller from "../scroller/index";

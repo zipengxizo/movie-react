@@ -2,7 +2,7 @@ import React from "react";
 import BScroll from "better-scroll";
 import { observer, inject } from "mobx-react";
 
-// import { CityContext } from "../../context/city";
+// import { CityContext } from "@/context/city";
 
 @inject("globalStore")
 @observer

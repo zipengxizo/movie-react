@@ -1,7 +1,7 @@
 import React from 'react';
 import Lazyload from 'r-img-lazyload';
 
-const pic = require('../../assets/images/default.png')
+const pic = require('@/assets/images/default.png')
 
 export default class LazyImage extends React.Component {
     constructor(props){

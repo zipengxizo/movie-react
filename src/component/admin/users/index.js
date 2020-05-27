@@ -2,7 +2,7 @@ import React from "react";
 
 import { Table, Tag, Space, Button, message, Popconfirm } from "antd";
 
-import api from "../../../api";
+import api from "@/api";
 
 export default class Users extends React.Component {
   constructor(props) {

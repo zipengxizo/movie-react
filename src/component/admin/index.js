@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Layout, Menu, Button } from "antd";
 import "./index.css";
 import { Route, NavLink, Switch, Redirect } from "react-router-dom";
-import history from '../../util/history'
+import history from '@/util/history'
 
 import AdminMovie from "../admin/movie";
 

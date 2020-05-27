@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../header";
 import { Loading } from "../loading";
 import "./detail.css";
-import api from "../../api";
+import api from "@/api";
 import { withRouter} from 'react-router-dom'
 
 
@@ -39,13 +39,15 @@ class Detail extends React.Component {
         console.log(err);
       })
       .finally(() => {
-        this.isLoading = false;
+        this.setState({
+          isLoading:false
+        })
       });
   }
   handleToBack() {
     // history('/movie/nowPlaying');
-    // this.props.history.push('/movie/nowPlaying');
-    this.props.history.goBack();
+    this.props.history.push('/movie/nowPlaying');
+    // this.props.history.go(-1)
   }
 
   render() {

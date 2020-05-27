@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
 import { observer, inject } from "mobx-react";
-// import {CityContext} from '../../context/city';
+// import {CityContext} from '@/context/city';
 import axios from "axios";
 @inject("globalStore")
 @observer

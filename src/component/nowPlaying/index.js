@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
-// import { CityContext } from "../../context/city";
+// import { CityContext } from "@/context/city";
 import { useHistory} from "react-router-dom";
 import { observer, inject } from "mobx-react";
 import Model from "../model/index";
@@ -108,18 +108,13 @@ function MovieComingItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <LazyLoad height={60}>
+          <LazyLoad height={60} once offset={60} placeholder={<Loading isLoading position />}>
             <img
               onClick={goDetail.bind(null, item.id)}
               src={item.img.replace(/w\.h/, "128.180")}
               alt=""
             />
           </LazyLoad>
-          {/* <img
-            src={item.img.replace(/w\.h/, "128.180")}
-            onClick={goDetail.bind(null, item.id)}
-            alt=""
-          /> */}
         </div>
         <div className="info_list">
           <h2>{item.nm}</h2>
@@ -146,18 +141,13 @@ function MovieItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <LazyLoad height={60}>
+          <LazyLoad height={60} once offset={60} placeholder={<Loading isLoading position />}>
             <img
               onClick={goDetail.bind(null, item.id)}
               src={item.img.replace(/w\.h/, "128.180")}
               alt=""
             />
           </LazyLoad>
-          {/* <img
-            src={item.img.replace(/w\.h/, "128.180")}
-            onClick={goDetail.bind(null, item.id)}
-            alt=""
-          /> */}
         </div>
         <div className="info_list">
           <h2>{item.nm}</h2>

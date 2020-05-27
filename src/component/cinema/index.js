@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
-// import { CityContext } from "../../context/city";
+// import { CityContext } from "@/context/city";
 import Model from "../model/index";
 import Network from "../network/index";
 import { observer, inject } from "mobx-react";

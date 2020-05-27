@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { observer, inject } from "mobx-react";
-// import {CityContext} from '../../context/city'
+// import {CityContext} from '@/context/city'
 
 @inject("globalStore")
 @observer

@@ -1,12 +1,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import Header from "../../component/header";
+import Header from "@/component/header";
 import "./index.css";
-import { Loading } from "../../component/loading";
-import Scroller from "../../component/scroller";
-// import { CityContext } from "../../context/city";
-import Model from "../../component/model";
-import Network from "../../component/network";
+import { Loading } from "@/component/loading";
+import Scroller from "@/component/scroller";
+// import { CityContext } from "@/context/city";
+import Model from "@/component/model";
+import Network from "@/component/network";
 import { observer, inject } from "mobx-react";
 
 @inject("cinemaStore", "globalStore")

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import MovieTab from "../movietab";
-// import { CityContext } from "../../context/city";
+// import { CityContext } from "@/context/city";
 
 import { observer, inject } from "mobx-react";
 

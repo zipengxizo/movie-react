@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import {  Route, Switch, Redirect } from 'react-router-dom'
 
-import Header from "../../component/header";
-import Center from "../../component/center";
+import Header from "@/component/header";
+import Center from "@/component/center";
 
 export default class Mine extends React.Component {
   render() {

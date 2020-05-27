@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import api from "../../api";
+import api from "@/api";
 import { messageBox } from "../alert";
-import { Auth } from "../../auth";
+import { Auth } from "@/auth";
 
 import "./index.css";
 import { Loading } from "../loading";
