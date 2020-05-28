@@ -23,6 +23,10 @@ class Scroller extends React.Component {
         threshold: 30,
         stop: 20,
       },
+      pullUpLoad: {
+        threshold: 30,
+        stop:20
+      },
       snap: {
         loop: false,
         threshold: 0.6,
@@ -31,22 +35,23 @@ class Scroller extends React.Component {
     this.scroller.on("pullingDown", () => {
       this.props.handleToTouchEnd && this.props.handleToTouchEnd(this.scroller);
     });
+    this.scroller.on("pullingUp", () => {
+      this.props.handlePullingUp && this.props.handlePullingUp(this.scroller);
+    });
     this.scroller.on("scrollEnd", (pos) => {
-      if(pos.x === 0 && pos.y === 0 && this.flag){
+      if (pos.x === 0 && pos.y === 0 && this.flag) {
         this.globalStore.changeTabIndex(0);
         // this.context.changeTabIndex(0);
-      }
-      else if(pos.x === -window.screen.width && pos.y === 0){
+      } else if (pos.x === -window.screen.width && pos.y === 0) {
         this.globalStore.changeTabIndex(1);
         // this.context.changeTabIndex(1)
-      }
-      else{
+      } else {
         this.flag = false;
       }
     });
-    this.scroller.on("scroll",()=>{
+    this.scroller.on("scroll", () => {
       this.props.handleforceCheck && this.props.handleforceCheck();
-    })
+    });
   }
   componentDidUpdate(prevProps) {
     if (this.props.scrollX && prevProps.tabIndex !== this.props.tabIndex) {

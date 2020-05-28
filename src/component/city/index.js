@@ -126,7 +126,6 @@ class City extends React.Component {
       <div className="city_body">
         <Loading isLoading={this.state.isLoading} />
         <div className="city_list">
-          {/* <Scroller> */}
           <div className="city_hot">
             <h2>热门城市</h2>
             <ul className="clearfix">
@@ -134,9 +133,16 @@ class City extends React.Component {
             </ul>
           </div>
           <div className="city_sort" ref={this.citySortRef}>
+           {/*  <List
+              height={this.contentHeight}
+              itemCount={this.contentCount}
+              itemSize={this.contentWidth}
+              width={this.contentWidth}
+            >
+              {Row}
+            </List> */}
             <CitiesItem citiesList={this.state.cityList} />
           </div>
-          {/* </Scroller> */}
         </div>
         <div className="city_index">
           <ul>
@@ -171,7 +177,7 @@ let HotCities = inject("globalStore")(
   observer(({ globalStore, hotCities }) => {
     let history = useHistory();
     function handleToCity(cityName, cityId) {
-      globalStore.changeCityId(cityId,cityName);
+      globalStore.changeCityId(cityId, cityName);
       globalStore.changeTabIndex(0);
       window.localStorage.setItem("nowNm", cityName);
       window.localStorage.setItem("nowId", cityId);

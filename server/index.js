@@ -6,13 +6,6 @@ import Koa from "koa";
 import KoaStatic from "koa-static";
 import fs from "fs";
 import path from "path";
-
-// import ErrorBoundary from "../src/util/boundaries/errorBoundary";
-// import { Provider } from "mobx-react";
-// import Interceptors from "../src/util/interceptors";
-
-// import stores from "../src/store";
-import { Loading } from "../src/component/loading/index";
 import NowPlaying from "../src/component/nowPlaying/index";
 
 const app = new Koa();

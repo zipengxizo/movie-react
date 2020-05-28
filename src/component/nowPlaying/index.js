@@ -3,11 +3,11 @@ import "./index.css";
 import { Loading } from "../loading";
 import Scroller from "../scroller";
 // import { CityContext } from "@/context/city";
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { observer, inject } from "mobx-react";
 import Model from "../model/index";
 import Network from "../network/index";
-import LazyLoad,{forceCheck } from "react-lazyload";
+import LazyLoad, { forceCheck } from "react-lazyload";
 
 @inject("movieStore", "globalStore")
 @observer
@@ -18,6 +18,7 @@ class NowPlaying extends React.Component {
     this.globalStore = this.props.globalStore;
     this.handleToTouchEnd = this.handleToTouchEnd.bind(this);
     this.handleforceCheck = this.handleforceCheck.bind(this);
+    this.handlePullingUp = this.handlePullingUp.bind(this);
     this.handleReload = this.handleReload.bind(this);
     props.cacheLifecycles.didCache(this.componentDidCache);
     props.cacheLifecycles.didRecover(this.componentDidRecover);
@@ -31,15 +32,27 @@ class NowPlaying extends React.Component {
     if (this.store.prevCityid === this.globalStore.cityId) return;
     this.store.initData(this.globalStore.cityId);
   };
-
+  /**
+   * 下拉加载
+   * @param {*} scroller
+   */
   handleToTouchEnd(scroller) {
     /* let cityId = this.context.cityId;
     let tabIndex = this.context.tabIndex; */
     let cityId = this.globalStore.cityId;
     let tabIndex = this.globalStore.tabIndex;
-    this.store.pullData(cityId, tabIndex, scroller);
+    this.store.pullData(cityId, tabIndex, scroller, 0);
   }
-  handleforceCheck(){
+  /**
+   * 上拉加载
+   * @param scroller
+   */
+  handlePullingUp(scroller) {
+    let cityId = this.globalStore.cityId;
+    let tabIndex = this.globalStore.tabIndex;
+    this.store.pullData(cityId, tabIndex, scroller, 1);
+  }
+  handleforceCheck() {
     forceCheck();
   }
   handleReload(e) {
@@ -72,19 +85,27 @@ class NowPlaying extends React.Component {
               </Model>
             )}
             <div className="movie_body" style={{ width: window.screen.width }}>
-              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+              <Scroller
+                handleToTouchEnd={this.handleToTouchEnd}
+                handlePullingUp={this.handlePullingUp}
+              >
                 <ul>
                   <li className="pullDown">{this.store.pullDownMsg}</li>
                   <MovieItem movieList={this.store.movieList} />
+                  <li className="pullDown">{this.store.pullingUp}</li>
                 </ul>
               </Scroller>
             </div>
 
             <div className="movie_body" style={{ width: window.screen.width }}>
-              <Scroller handleToTouchEnd={this.handleToTouchEnd}>
+              <Scroller
+                handleToTouchEnd={this.handleToTouchEnd}
+                handlePullingUp={this.handlePullingUp}
+              >
                 <ul>
                   <li className="pullDown">{this.store.pullDownMsg}</li>
                   <MovieComingItem comingList={this.store.comingList} />
+                  <li className="pullDown">{this.store.pullingUp}</li>
                 </ul>
               </Scroller>
             </div>
@@ -108,7 +129,12 @@ function MovieComingItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <LazyLoad height={60} once offset={60} placeholder={<Loading isLoading position />}>
+          <LazyLoad
+            height={60}
+            once
+            offset={60}
+            placeholder={<Loading isLoading position />}
+          >
             <img
               onClick={goDetail.bind(null, item.id)}
               src={item.img.replace(/w\.h/, "128.180")}
@@ -141,7 +167,12 @@ function MovieItem(props) {
     return (
       <li key={index}>
         <div className="pic_show">
-          <LazyLoad height={60} once offset={60} placeholder={<Loading isLoading position />}>
+          <LazyLoad
+            height={60}
+            once
+            offset={60}
+            placeholder={<Loading isLoading position />}
+          >
             <img
               onClick={goDetail.bind(null, item.id)}
               src={item.img.replace(/w\.h/, "128.180")}
