@@ -1,5 +1,4 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 import Header from "@/component/header";
 import "./index.css";
 import { Loading } from "@/component/loading";
@@ -85,7 +84,7 @@ class Cinema extends React.Component {
 }
 
 // Cinema.contextType = CityContext;
-export default withRouter(Cinema);
+export default Cinema;
 
 function CinemaItem(props) {
   const cinemaList = props.cinemaList;

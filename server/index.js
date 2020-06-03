@@ -6,7 +6,7 @@ import Koa from "koa";
 import KoaStatic from "koa-static";
 import fs from "fs";
 import path from "path";
-import NowPlaying from "../src/component/nowPlaying/index";
+import NowPlaying from "../src/component/nowPlaying/index2";
 
 const app = new Koa();
 const router = new Router();
