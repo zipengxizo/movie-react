@@ -14,7 +14,7 @@
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
     "mobx": "^4.3.1",
-    "mobx-react": "^5.1.0",
+    "mobx-react": "^5.2.8",
     "moment": "^2.25.3",
     "nodemon": "^2.0.4",
     "react": "^16.13.1",
@@ -39,9 +39,9 @@
   },
   "browserslist": {
     "production": [
-        "> 0.2%",
-        "last 2 versions",
-        "not ie <= 8"
+      "> 0.2%",
+      "last 2 versions",
+      "not ie <= 8"
     ],
     "development": [
       "last 1 chrome version",

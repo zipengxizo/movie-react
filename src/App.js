@@ -5,7 +5,7 @@ import Interceptors from "./util/interceptors";
 
 import ErrorBoundary from "./util/boundaries/errorBoundary";
 import { Provider } from "mobx-react";
-import stores from './store'
+import * as stores from './store'
 export default class App extends React.Component {
   render() {
     return (

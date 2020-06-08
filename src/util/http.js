@@ -6,7 +6,7 @@ import axios from 'axios';
 import history from './history'
 
 import {message} from 'antd';
-import store from '../store';
+import * as store from '../store';
 let {globalStore} = store;
 
 
